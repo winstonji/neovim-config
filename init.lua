@@ -196,6 +196,60 @@ vim.keymap.set("n", "<leader>_", ":split<CR>", { desc = "Split window vertically
 -- Open netrw
 vim.keymap.set("n", "<leader>rw", ":Ex<CR>", { desc = "Open neovim netrw" })
 
+-- NOTE: Open terminal emulator
+--
+-- Create stored state
+local state = {
+	floating = {
+		buf = -1,
+		win = -1,
+	},
+}
+
+local function create_floating_window(opts)
+	-- Set options
+	opts = opts or {}
+	local width = opts.width or math.floor(vim.o.columns * 0.8)
+	local height = opts.height or math.floor(vim.o.lines * 0.8)
+	local col = math.floor((vim.o.columns - width) / 2)
+	local row = math.floor((vim.o.lines - height) / 2)
+
+	-- Create buffer
+	local buf = nil
+	if vim.api.nvim_buf_is_valid(opts.buf) then
+		buf = opts.buf
+	else
+		buf = vim.api.nvim_create_buf(false, true)
+	end
+
+	-- Set window configuration
+	local win_config = {
+		relative = "editor",
+		width = width,
+		height = height,
+		col = col,
+		row = row,
+		style = "minimal",
+		border = "rounded",
+	}
+
+	-- Create window
+	local win = vim.api.nvim_open_win(buf, true, win_config)
+	return { buf = buf, win = win }
+end
+
+vim.keymap.set({ "n", "t" }, "<leader>`", function()
+	if not vim.api.nvim_win_is_valid(state.floating.win) then
+		state.floating = create_floating_window({ buf = state.floating.buf })
+		if vim.bo[state.floating.buf].buftype ~= "terminal" then
+			vim.cmd.term()
+		end
+		vim.cmd.startinsert()
+	else
+		vim.api.nvim_win_hide(state.floating.win)
+	end
+end, { desc = "[T]oggle [T]erminal emulator" })
+
 -- NOTE: [[ Basic Autocommands ]]
 
 --  See `:help lua-guide-autocommands`
@@ -208,6 +262,15 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
 	callback = function()
 		vim.highlight.on_yank()
+	end,
+})
+
+vim.api.nvim_create_autocmd("TermOpen", {
+	desc = "Open terminal with specific options",
+	group = vim.api.nvim_create_augroup("custom-term-open", { clear = true }),
+	callback = function()
+		vim.opt.number = false
+		vim.opt.relativenumber = false
 	end,
 })
 
@@ -1155,7 +1218,6 @@ require("lazy").setup({
 			{ "<C-;>", "<cmd>TmuxNavigatePrevious<CR>" },
 		},
 	},
-
 	-- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
 	-- init.lua. If you want these files, they are in the repository, so you can just download them and
 	-- place them in the correct locations.
