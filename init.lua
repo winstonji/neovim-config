@@ -185,6 +185,12 @@ vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" }
 --
 --  See `:help wincmd` for a list of all window commands
 
+-- Center cursor on page scroll
+vim.keymap.set("n", "<C-u>", "M<C-u>", { desc = "Center cursor then scroll up half page" })
+vim.keymap.set("n", "<C-d>", "M<C-d>", { desc = "Center cursor then scroll down half page" })
+vim.keymap.set("n", "<C-b>", "M<C-b>", { desc = "Center cursor then scroll up full page" })
+vim.keymap.set("n", "<C-f>", "M<C-f>", { desc = "Center cursor then scroll down full page" })
+
 -- Shift + J/K to move lines vertically
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
