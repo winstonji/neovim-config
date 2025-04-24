@@ -120,6 +120,9 @@ vim.opt.showmode = false
 -- Enable break indent
 vim.opt.breakindent = true
 
+-- Disable wrap
+vim.wo.wrap = false
+
 -- Save undo history
 vim.opt.undofile = true
 
@@ -186,8 +189,8 @@ vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" }
 --  See `:help wincmd` for a list of all window commands
 
 -- Center cursor on page scroll
-vim.keymap.set("n", "<C-u>", "<C-u>M", { desc = "Center cursor then scroll up half page" })
-vim.keymap.set("n", "<C-d>", "<C-d>M", { desc = "Center cursor then scroll down half page" })
+vim.keymap.set("n", "<C-u>", "M<C-u>", { desc = "Center cursor then scroll up half page" })
+vim.keymap.set("n", "<C-d>", "M<C-d>", { desc = "Center cursor then scroll down half page" })
 vim.keymap.set("n", "<C-b>", "<C-b>M", { desc = "Center cursor then scroll up full page" })
 vim.keymap.set("n", "<C-f>", "<C-f>M", { desc = "Center cursor then scroll down full page" })
 
