@@ -123,6 +123,9 @@ vim.opt.breakindent = true
 -- Disable wrap
 vim.wo.wrap = false
 
+-- Add colorcolumn
+vim.opt.colorcolumn = "100"
+
 -- Save undo history
 vim.opt.undofile = true
 
